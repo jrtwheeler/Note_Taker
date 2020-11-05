@@ -18,12 +18,8 @@ app.get("*", function(req, res) {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get("/table", function(req, res) {
-  res.sendFile(path.join(__dirname + "/public/" + "table.html"));
-});
-
 // APIs
-app.get("/api/reservations", function(req, res) {
+app.get("/api/notes", function(req, res) {
   return res.json(table);
 });
 
