@@ -1,6 +1,7 @@
 const express = require('express');
 var path = require("path");
-const table = require('./data/tabledata');
+var fs = require("fs");
+const notes = require('./data/tabledata');
 const waitlist = require('./data/waitlist');
 
 const app = express();
@@ -20,10 +21,10 @@ app.get("*", function(req, res) {
 
 // APIs
 app.get("/api/notes", function(req, res) {
-  return res.json(table);
+  return res.json(notes);
 });
 
-app.get("/api/waitlist", function(req, res) {
+app.post("/api/waitlist", function(req, res) {
   return res.json(waitlist);
 })
 
