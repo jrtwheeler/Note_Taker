@@ -9,13 +9,13 @@ const fs = require("fs");
 // ROUTING
 // ===============================================================================
 
-module.exports = function(app) {
+module.exports = (app) => {
   // HTML GET Requests
   // Below code handles when users "visit" a page.
   // In each of the below cases the user is shown an HTML page of content
   // ---------------------------------------------------------------------------
 
-  app.get("/notes", function (req, res) {
+  app.get("/notes", (req, res) => {
     fs.readFile("./public/notes.html", "utf8", function (err, data) {
       if (err) return res.sendStatus(404);
   
@@ -24,7 +24,7 @@ module.exports = function(app) {
   });
 
   // If no matching route is found default to home
-  app.get("*", function(req, res) {
+  app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../public/index.html"));
   });
 };
