@@ -10,23 +10,29 @@ const fs = require("fs");
 // ===============================================================================
 
 module.exports = (app) => {
+    let notes = [];
 
-    app.get("/api/notes", (req, res) => {
-        fs.readFile(path.join(__dirname, "../db/db.json"), function (err, data) {
-            if (err) throw err;
-            var jsonData = JSON.parse(data);
+    fs.readFile(path.join(__dirname, "../db/db.json"), (err, data) => {
+        if (err) throw err;
+        var notes = JSON.parse(data);
+        return notes;
+    });
 
-            console.log(jsonData);
-            return jsonData;
-        });
+    app.get("/api/notes", (req, res) => {        
+            res.json(notes);
+            console.log(notes);   
     });
 
     app.post("/api/notes", (req, res) => {
         // req.body hosts is equal to the JSON post sent from the user
         // This works because of our body parsing middleware
-        var notes = req.body;
-
-        console.log(notes);
+        var note = req.body;
+        notes.push(note);
+        fs.writeFile(path.join(__dirname, "../db/db.json"), JSON.stringify(notes,'\t'), err => {
+            if (err) throw err;
+            return true;
+        });
+        return console.log("Added new note: " + note.title);
 
     });
 }
