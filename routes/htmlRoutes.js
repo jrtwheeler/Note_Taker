@@ -19,12 +19,12 @@ module.exports = function(app) {
     fs.readFile("./public/notes.html", "utf8", function (err, data) {
       if (err) return res.sendStatus(404);
   
-      res.sendFile(path.join(__dirname, "../notes.html"));
+      res.sendFile(path.join(__dirname, "../public/notes.html"));
     });
   });
 
   // If no matching route is found default to home
   app.get("*", function(req, res) {
-    res.sendFile(path.join(__dirname, "../notes.html"));
+    res.sendFile(path.join(__dirname, "./index.html"));
   });
 };

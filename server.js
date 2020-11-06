@@ -12,7 +12,7 @@
 // =============================================================
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
+
 
 // Sets up the Express App
 // =============================================================
@@ -24,7 +24,7 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-require("./public/routes/htmlRoutes.js")(app);
+require("./routes/htmlRoutes")(app);
 
 app.listen(PORT, function () {
   console.log("http://localhost:" + PORT);
