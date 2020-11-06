@@ -1,8 +1,8 @@
 const express = require('express');
 const path = require("path");
 const fs = require("fs");
-const notes = require('./data/tabledata');
-const waitlist = require('./data/waitlist');
+// const notes = require('./data/tabledata');
+// const waitlist = require('./data/waitlist');
 
 const app = express();
 const PORT = 3000;
