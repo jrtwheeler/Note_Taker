@@ -4,6 +4,8 @@
 // ===============================================================================
 let path = require("path");
 const fs = require("fs");
+const util = require("util");
+const readFileAsync = util.promisify(fs.readFile);
 
 // ===============================================================================
 // ROUTING
@@ -16,15 +18,20 @@ module.exports = (app) => {
   // ---------------------------------------------------------------------------
 
   app.get("/notes", (req, res) => {
-    fs.readFile("./public/notes.html", "utf8", function (err, data) {
+    readFileAsync("./public/notes.html", "utf8", function (err, data) {
       if (err) return res.sendStatus(404);
-  
-      res.sendFile(path.join(__dirname, "../public/notes.html"));
+
+    res.sendFile(path.join(__dirname, "../public/notes.html"));
     });
   });
 
   // If no matching route is found default to home
   app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../public/index.html"));
+  });
+
+  //Root file
+  app.get("/", function (req, res) {
+    res.json(path.join(__dirname, "../public/index.html"));
   });
 };
