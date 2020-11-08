@@ -41,11 +41,7 @@ module.exports = (app) => {
 
             res.json(notes);
             res.end();
-        });
-
-        console.log(newNote, "Has been successfully added to your notes!");
-        console.log("Here are your updated notes:", notes);
-        
+        });        
     });
 
     app.delete("/api/notes/:id", function (req, res) {
