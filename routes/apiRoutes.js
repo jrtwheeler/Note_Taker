@@ -48,7 +48,6 @@ module.exports = (app) => {
 
         let noteId = req.params.id;
         let newId = 0;
-        console.log(`Deleting note with ID number = ${noteId}`);
         notes = notes.filter(currentNote => {
             return currentNote.id != noteId;
         });
@@ -60,7 +59,6 @@ module.exports = (app) => {
             if (err) throw (err);
             
             res.json(notes);
-            console.log("Here are your updated notes:", notes);
         })
     });
 
