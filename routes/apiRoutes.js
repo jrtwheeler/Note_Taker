@@ -5,7 +5,8 @@
 const path = require("path");
 const fs = require("fs");
 const util = require("util");
-let notes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
+const database = "./db/db.json";
+// let notes = JSON.parse(fs.readFileSync(database, "utf8"));
 
 // ===============================================================================
 // PROMISIFY
@@ -19,29 +20,41 @@ const writeFileAsync = util.promisify(fs.writeFile);
 // ===============================================================================
 
 module.exports = (app) => {
+    
+    getNotes();
 
+    async function getNotes() {
     app.get("/api/notes", (req, res) => {
-        readFileAsync("./db/db.json", "utf8")
-        .then(function (err, notes) {
-            if (err) throw (err);
-
-            res.json(notes)
-        })
-    });
-
-    app.post("/api/notes", function (req, res) {
-
-        let newNote = req.body;
-        let noteID = (notes.length).toString();
-        newNote.id = noteID;
-        notes.push(newNote);
-
-        writeFileAsync("./db/db.json", JSON.stringify(notes)).then(function (err, notes) {
-            if (err) throw (err);
-
+        try {
+            let notes = readFileAsync(database, "utf8");
             res.json(notes);
-            res.end();
-        });        
+        } catch (err) {
+            console.log(err);
+        }
+    })
+}
+
+    app.post("/api/notes", (req, res) => {
+        try {
+            let notes = readFileAsync(database, "utf8");
+            req.json(notes);
+            console.log(res.json(notes))
+        } catch (err) {
+            console.log(err);
+        }
+            //     notes = [req.body];
+
+            //     notes.push({ title: req.body.title, text: req.body.text });
+
+            //     writeFileAsync(database, JSON.stringify(notes))
+            //         .then((notes) => {
+            //             res.json(notes);
+            //         }).catch((err) => {
+            //             console.log(err);
+            //         })
+            // }).catch((err) => {
+            //     console.log(err);
+            // })
     });
 
     app.delete("/api/notes/:id", function (req, res) {
@@ -55,9 +68,9 @@ module.exports = (app) => {
             currentNote.id = newId.toString();
             newId++;
         }
-        writeFileAsync("./db/db.json", JSON.stringify(notes)).then(function (err, notes) {
+        writeFileAsync(database, JSON.stringify(notes)).then(function (err, notes) {
             if (err) throw (err);
-            
+
             res.json(notes);
         })
     });
