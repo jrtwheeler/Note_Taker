@@ -21,10 +21,9 @@ const writeFileAsync = util.promisify(fs.writeFile);
 
 module.exports = (app) => {
     
-    getNotes();
 
-    async function getNotes() {
-    app.get("/api/notes", (req, res) => {
+    app.route("/api/notes")
+    .get( (req, res) => {
         try {
             let notes = readFileAsync(database, "utf8");
             res.json(notes);
@@ -32,13 +31,15 @@ module.exports = (app) => {
             console.log(err);
         }
     })
-}
 
-    app.post("/api/notes", (req, res) => {
+
+    .post((req, res) => {
         try {
             let notes = readFileAsync(database, "utf8");
-            req.json(notes);
-            console.log(res.json(notes))
+            let data = JSON.stringify(notes);
+            console.log(data)
+            console.log(req.body)
+            writeFileAsync(database, JSON.stringify(req.body));
         } catch (err) {
             console.log(err);
         }
