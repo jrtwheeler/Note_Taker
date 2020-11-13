@@ -20,7 +20,6 @@ const writeFileAsync = util.promisify(fs.writeFile);
 // ===============================================================================
 
 module.exports = (app) => {
-    
 
     app.route("/api/notes")
     .get( (req, res) => {
@@ -35,11 +34,15 @@ module.exports = (app) => {
 
     .post((req, res) => {
         try {
-            let notes = readFileAsync(database, "utf8");
-            let data = JSON.stringify(notes);
-            console.log(data)
-            console.log(req.body)
-            writeFileAsync(database, JSON.stringify(req.body));
+            let notes = async ()=> {
+            await readFileAsync(database, "utf8");
+            };
+            console.log(notes)
+
+            let returnData = [notes];
+            returnData.push(req.body);
+
+            writeFileAsync(database, JSON.stringify(returnData));
         } catch (err) {
             console.log(err);
         }
@@ -56,24 +59,24 @@ module.exports = (app) => {
             // }).catch((err) => {
             //     console.log(err);
             // })
-    });
+    // });
 
-    app.delete("/api/notes/:id", function (req, res) {
+    // app.delete("/api/notes/:id", function (req, res) {
 
-        let noteId = req.params.id;
-        let newId = 0;
-        notes = notes.filter(currentNote => {
-            return currentNote.id != noteId;
-        });
-        for (currentNote of notes) {
-            currentNote.id = newId.toString();
-            newId++;
-        }
-        writeFileAsync(database, JSON.stringify(notes)).then(function (err, notes) {
-            if (err) throw (err);
+    //     let noteId = req.params.id;
+    //     let newId = 0;
+    //     notes = notes.filter(currentNote => {
+    //         return currentNote.id != noteId;
+    //     });
+    //     for (currentNote of notes) {
+    //         currentNote.id = newId.toString();
+    //         newId++;
+    //     }
+    //     writeFileAsync(database, JSON.stringify(notes)).then(function (err, notes) {
+    //         if (err) throw (err);
 
-            res.json(notes);
-        })
+    //         res.json(notes);
+    //     })
     });
 
 }
