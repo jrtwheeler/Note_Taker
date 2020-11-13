@@ -21,8 +21,7 @@ const writeFileAsync = util.promisify(fs.writeFile);
 
 module.exports = (app) => {
 
-    app.route("/api/notes")
-    .get( (req, res) => {
+    app.get("/api/tables", (req, res) => {
         try {
             let notes = readFileAsync(database, "utf8");
             res.json(notes);
@@ -30,28 +29,27 @@ module.exports = (app) => {
             console.log(err);
         }
     })
+    
+    // .post((req, res) => {
+    //     try {
+    //         let notes = async ()=> {
+    //         await readFileAsync(database, "utf8");
+    //         };
+    //         console.log(notes)
 
+    //         let returnData = [notes];
+    //         returnData.push(req.body);
 
-    .post((req, res) => {
-        try {
-            let notes = async ()=> {
-            await readFileAsync(database, "utf8");
-            };
-            console.log(notes)
+    //         writeFileAsync(database, JSON.stringify(returnData));
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    //         //     notes = [req.body];
 
-            let returnData = [notes];
-            returnData.push(req.body);
+    //         //     notes.push({ title: req.body.title, text: req.body.text });
 
-            writeFileAsync(database, JSON.stringify(returnData));
-        } catch (err) {
-            console.log(err);
-        }
-            //     notes = [req.body];
-
-            //     notes.push({ title: req.body.title, text: req.body.text });
-
-            //     writeFileAsync(database, JSON.stringify(notes))
-            //         .then((notes) => {
+    //         //     writeFileAsync(database, JSON.stringify(notes))
+    //         //         .then((notes) => {
             //             res.json(notes);
             //         }).catch((err) => {
             //             console.log(err);
@@ -77,6 +75,6 @@ module.exports = (app) => {
 
     //         res.json(notes);
     //     })
-    });
+    // });
 
 }
