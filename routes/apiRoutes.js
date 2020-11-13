@@ -21,15 +21,35 @@ const writeFileAsync = util.promisify(fs.writeFile);
 
 module.exports = (app) => {
 
-    app.get("/api/tables", (req, res) => {
+    app.get("/api/notes", (req, res) => {
         try {
-            let notes = readFileAsync(database, "utf8");
-            res.json(notes);
+            readFileAsync(database, "utf8", function(err, notes) {
+                notes = JSON.parse(notes);
+                res.json(notes);
+            });
         } catch (err) {
             console.log(err);
         }
-    })
-    
+    });
+
+    app.post("/api/notes", (req, res) => {
+        // Note the code here. Our "server" will respond to requests and let users know if they have a table or not.
+        // It will do this by sending out the value "true" have a table
+        // req.body is available since we're using the body parsing middleware
+        try {
+            readFileAsync(database, "utf8", (err, data) => {
+                let newNote = JSON.parse(data);
+                req.body.id = newNote.length;
+                newNote.push(req.body);
+                newNote = JSON.stringify(newNote);
+                writeFileAsync(database, newNote, "utf8");
+                 console.log(newNote);
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    });
+
     // .post((req, res) => {
     //     try {
     //         let notes = async ()=> {
@@ -50,13 +70,13 @@ module.exports = (app) => {
 
     //         //     writeFileAsync(database, JSON.stringify(notes))
     //         //         .then((notes) => {
-            //             res.json(notes);
-            //         }).catch((err) => {
-            //             console.log(err);
-            //         })
-            // }).catch((err) => {
-            //     console.log(err);
-            // })
+    //             res.json(notes);
+    //         }).catch((err) => {
+    //             console.log(err);
+    //         })
+    // }).catch((err) => {
+    //     console.log(err);
+    // })
     // });
 
     // app.delete("/api/notes/:id", function (req, res) {
