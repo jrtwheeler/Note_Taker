@@ -55,24 +55,32 @@ module.exports = (app) => {
                 //Send the data back to the browser
                 res.send(JSON.parse(newNote));
             });
+        //Error handling
         } catch (err) {
             console.log(err);
         }
     });
-
+    //Express verb to delete the notes by id
     app.delete("/api/notes/:id", (req, res) => {
+        //Try to read the db.json database
         try {
             readFileAsync(database, "utf8", (err, data) => {
+                //Take the data from the callback function and turn it into
+                //an array with JSON.parse and assign it to variable newNote
                 let newNote = JSON.parse(data);
+                //Use filter to read the array of notes and compare the 
+                //id of the db to the request id
                 newNote = newNote.filter((notes) => {
-                    if (notes.id != req.params.id) {
-                        return notes
-                    };
+                    return notes.id != req.params.id
+                    })
+                    //The new array is turned into a string
                     newNote = JSON.stringify(newNote);
+                    //The new array is written back to the database
                     writeFileAsync(database, newNote, "utf8");
+                    //The information is returned to the browser
                     res.send(JSON.parse(newNote));
-                })
             });
+        //Error handling
         } catch (err) {
             console.log(err);
         }
