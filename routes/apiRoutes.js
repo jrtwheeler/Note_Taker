@@ -20,81 +20,58 @@ const writeFileAsync = util.promisify(fs.writeFile);
 // ===============================================================================
 
 module.exports = (app) => {
-
+    //Express verb get the api
     app.get("/api/notes", (req, res) => {
+        //Try to read the db.json database
         try {
-            readFileAsync(database, "utf8", function(err, notes) {
+            readFileAsync(database, "utf8", function (err, notes) {
+                //Turn the response into an array using JSON.parse
                 notes = JSON.parse(notes);
+                //Respond to the browser with json notes
                 res.json(notes);
             });
+        //Error handling
         } catch (err) {
             console.log(err);
         }
     });
-
+    //Express verb post writes to the database json.db
     app.post("/api/notes", (req, res) => {
-        // Note the code here. Our "server" will respond to requests and let users know if they have a table or not.
-        // It will do this by sending out the value "true" have a table
-        // req.body is available since we're using the body parsing middleware
+        //Try to read the database 
         try {
             readFileAsync(database, "utf8", (err, data) => {
+                //Take the data from the callback function and turn it into
+                //an array with JSON.parse and assign it to variable newNote
                 let newNote = JSON.parse(data);
+                //Take the object from api and give it an id value that equals
+                //the length of the newNote array
                 req.body.id = newNote.length;
                 newNote.push(req.body);
                 newNote = JSON.stringify(newNote);
                 writeFileAsync(database, newNote, "utf8");
-                 console.log(newNote);
+                res.send(JSON.parse(newNote));
             });
         } catch (err) {
             console.log(err);
         }
     });
 
-    // .post((req, res) => {
-    //     try {
-    //         let notes = async ()=> {
-    //         await readFileAsync(database, "utf8");
-    //         };
-    //         console.log(notes)
-
-    //         let returnData = [notes];
-    //         returnData.push(req.body);
-
-    //         writeFileAsync(database, JSON.stringify(returnData));
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    //         //     notes = [req.body];
-
-    //         //     notes.push({ title: req.body.title, text: req.body.text });
-
-    //         //     writeFileAsync(database, JSON.stringify(notes))
-    //         //         .then((notes) => {
-    //             res.json(notes);
-    //         }).catch((err) => {
-    //             console.log(err);
-    //         })
-    // }).catch((err) => {
-    //     console.log(err);
-    // })
-    // });
-
-    // app.delete("/api/notes/:id", function (req, res) {
-
-    //     let noteId = req.params.id;
-    //     let newId = 0;
-    //     notes = notes.filter(currentNote => {
-    //         return currentNote.id != noteId;
-    //     });
-    //     for (currentNote of notes) {
-    //         currentNote.id = newId.toString();
-    //         newId++;
-    //     }
-    //     writeFileAsync(database, JSON.stringify(notes)).then(function (err, notes) {
-    //         if (err) throw (err);
-
-    //         res.json(notes);
-    //     })
-    // });
+    app.delete("/api/notes/:id", (req, res) => {
+        try {
+            readFileAsync(database, "utf8", (err, data) => {
+                let newNote = JSON.parse(data);
+                newNote = newNote.filter((notes) => {
+                    if (notes.id != req.params.id) {
+                        return notes
+                    };
+                    newNote = JSON.stringify(newNote);
+                    writeFileAsync(database, newNote, "utf8");
+                    res.send(JSON.parse(newNote));
+                })
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    });
 
 }
