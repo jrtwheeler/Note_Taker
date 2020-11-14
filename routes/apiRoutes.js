@@ -46,9 +46,13 @@ module.exports = (app) => {
                 //Take the object from api and give it an id value that equals
                 //the length of the newNote array
                 req.body.id = newNote.length;
+                //Push the req.body object into the newNote array
                 newNote.push(req.body);
+                //NewNote is turned into a string
                 newNote = JSON.stringify(newNote);
+                //Write the newNote array to the db.json file
                 writeFileAsync(database, newNote, "utf8");
+                //Send the data back to the browser
                 res.send(JSON.parse(newNote));
             });
         } catch (err) {
