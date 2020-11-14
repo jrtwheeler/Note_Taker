@@ -6,7 +6,6 @@ const path = require("path");
 const fs = require("fs");
 const util = require("util");
 const database = "./db/db.json";
-// let notes = JSON.parse(fs.readFileSync(database, "utf8"));
 
 // ===============================================================================
 // PROMISIFY
@@ -24,7 +23,7 @@ module.exports = (app) => {
     app.get("/api/notes", (req, res) => {
         //Try to read the db.json database
         try {
-            readFileAsync(database, "utf8", function (err, notes) {
+            readFileAsync(database, "utf8", (err, notes) => {
                 //Turn the response into an array using JSON.parse
                 notes = JSON.parse(notes);
                 //Respond to the browser with json notes
@@ -42,6 +41,7 @@ module.exports = (app) => {
             readFileAsync(database, "utf8", (err, data) => {
                 //Take the data from the callback function and turn it into
                 //an array with JSON.parse and assign it to variable newNote
+                //Parse turns a string into an object
                 let newNote = JSON.parse(data);
                 //Take the object from api and give it an id value that equals
                 //the length of the newNote array
@@ -49,6 +49,7 @@ module.exports = (app) => {
                 //Push the req.body object into the newNote array
                 newNote.push(req.body);
                 //NewNote is turned into a string
+                //Stringify turns something into a string
                 newNote = JSON.stringify(newNote);
                 //Write the newNote array to the db.json file
                 writeFileAsync(database, newNote, "utf8");
@@ -67,6 +68,7 @@ module.exports = (app) => {
             readFileAsync(database, "utf8", (err, data) => {
                 //Take the data from the callback function and turn it into
                 //an array with JSON.parse and assign it to variable newNote
+                //Parse turns a string into an object
                 let newNote = JSON.parse(data);
                 //Use filter to read the array of notes and compare the 
                 //id of the db to the request id
@@ -74,6 +76,7 @@ module.exports = (app) => {
                     return notes.id != req.params.id
                     })
                     //The new array is turned into a string
+                    //Stringify turns something into a string
                     newNote = JSON.stringify(newNote);
                     //The new array is written back to the database
                     writeFileAsync(database, newNote, "utf8");
